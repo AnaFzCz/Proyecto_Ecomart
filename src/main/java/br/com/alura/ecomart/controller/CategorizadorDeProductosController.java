@@ -4,6 +4,7 @@ package br.com.alura.ecomart.controller;
 import com.knuddels.jtokkit.Encodings;
 import com.knuddels.jtokkit.api.ModelType;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,13 +39,14 @@ public class CategorizadorDeProductosController {
                 """;
 
         var tokens = contarTokens(system, produto);
-        System.out.println("Caqntidad de Tokens: " + tokens);
+        System.out.println("Cantidad de Tokens: " + tokens);
         return this.chatClient.prompt()
                 .system(system)
                 .user(produto)
                 .options(ChatOptions.builder()
                         .temperature(0.85)
                         .build())
+                .advisors(new SimpleLoggerAdvisor())
                 .call()
                 .content();
     }
